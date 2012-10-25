@@ -28,6 +28,8 @@ typedef struct my_error_mgr {
 	jmp_buf setjmp_buffer;
 }* my_error_ptr;
 
+unsigned char clamp(unsigned char);
+
 void free_rrimage(rrimage *);
 
 unsigned char get_gray(rrimage *, int, int);
@@ -46,14 +48,14 @@ void set_g(unsigned char g, rrimage *, int, int);
 
 void set_b(unsigned char b, rrimage *, int, int);
 
-int check_if_png(FILE *);
+int check_if_png(char *);
 
-rrimage* read_jpeg(FILE *);
+rrimage* read_jpeg(char *);
 
-int write_jpeg(FILE *, rrimage *);
+int write_jpeg(char *, rrimage *);
 
-rrimage* read_png(FILE *);
+rrimage* read_png(char *);
 
-int write_png(FILE *, rrimage *);
+int write_png(char *, rrimage *);
 
 #endif

@@ -12,6 +12,18 @@ METHODDEF(void) my_error_exit(j_common_ptr cinfo) {
 	longjmp(myerr->setjmp_buffer, 1);
 }
 
+unsigned char min(unsigned char a, unsigned char b) {
+    return a < b ? a : b;
+}
+
+unsigned char max(unsigned char a, unsigned char b) {
+    return a > b ? a : b;
+}
+
+unsigned char clamp(unsigned char val) {
+    return min(max(val, 0), 255);
+}
+
 void free_rrimage(rrimage *data) {
     if (!data) {
         return;
@@ -24,10 +36,15 @@ void free_rrimage(rrimage *data) {
     free(data);
 }
 
-int check_if_png(FILE *fp) {
-	if (fp == NULL) {
+int check_if_png(char *file_name) {
+	if (!file_name) {
 		return 0;
 	}
+    
+    FILE *fp;
+    if ((fp = fopen(file_name, "rb")) == NULL) {
+        return 0;
+    }
     
 	char buf[PNG_MAGIC_SIZE];
     
@@ -41,8 +58,13 @@ int check_if_png(FILE *fp) {
 	return (!png_sig_cmp((void *)buf, (png_size_t) 0, PNG_MAGIC_SIZE));
 }
 
-rrimage* read_jpeg(FILE *in_file) {
-    if (in_file == NULL) {
+rrimage* read_jpeg(char *file_name) {
+    if (!file_name) {
+		return NULL;
+	}
+    
+    FILE *in_file;
+    if ((in_file = fopen(file_name, "rb")) == NULL) {
         return NULL;
     }
     
@@ -83,8 +105,13 @@ rrimage* read_jpeg(FILE *in_file) {
     return data;
 }
 
-int write_jpeg(FILE *out_file, rrimage *data) {
-    if (out_file == NULL || data == NULL || data->pixels == NULL) {
+int write_jpeg(char *file_name, rrimage *data) {
+    if (file_name == NULL || data == NULL || data->pixels == NULL) {
+        return 0;
+    }
+    
+    FILE *out_file;
+    if ((out_file = fopen(file_name, "wb")) == NULL) {
         return 0;
     }
     
@@ -128,8 +155,13 @@ int write_jpeg(FILE *out_file, rrimage *data) {
     return 1;
 }
 
-rrimage* read_png(FILE *in_file) {
-    if (in_file == NULL) {
+rrimage* read_png(char *file_name) {
+    if (file_name == NULL) {
+        return NULL;
+    }
+    
+    FILE *in_file;
+    if ((in_file = fopen(file_name, "rb")) == NULL) {
         return NULL;
     }
     
@@ -202,8 +234,13 @@ rrimage* read_png(FILE *in_file) {
     return data;
 }
 
-int write_png(FILE *out_file, rrimage *data) {
-    if (out_file == NULL || data == NULL || data->pixels == NULL) {
+int write_png(char *file_name, rrimage *data) {
+    if (file_name == NULL || data == NULL || data->pixels == NULL) {
+        return 0;
+    }
+    
+    FILE *out_file;
+    if ((out_file = fopen(file_name, "wb")) == NULL) {
         return 0;
     }
     
@@ -306,7 +343,7 @@ void set_r(unsigned char r, rrimage *data, int row, int col) {
         return;
     }
     
-    data->pixels[row * data->width * 3 + col * 3] = r;
+    data->pixels[row * data->width * 3 + col * 3] = clamp(r);
 }
 
 void set_g(unsigned char g, rrimage *data, int row, int col) {
@@ -314,7 +351,7 @@ void set_g(unsigned char g, rrimage *data, int row, int col) {
         return;
     }
     
-    data->pixels[row * data->width * 3 + col * 3 + 1] = g;
+    data->pixels[row * data->width * 3 + col * 3 + 1] = clamp(g);
 }
 
 void set_b(unsigned char b, rrimage *data, int row, int col) {
@@ -322,5 +359,5 @@ void set_b(unsigned char b, rrimage *data, int row, int col) {
         return;
     }
     
-    data->pixels[row * data->width * 3 + col * 3 + 2] = b;
+    data->pixels[row * data->width * 3 + col * 3 + 2] = clamp(b);
 }
