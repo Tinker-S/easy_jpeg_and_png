@@ -12,15 +12,15 @@ METHODDEF(void) my_error_exit(j_common_ptr cinfo) {
 	longjmp(myerr->setjmp_buffer, 1);
 }
 
-unsigned char min(unsigned char a, unsigned char b) {
+int min(int a, int b) {
     return a < b ? a : b;
 }
 
-unsigned char max(unsigned char a, unsigned char b) {
+int max(int a, int b) {
     return a > b ? a : b;
 }
 
-unsigned char clamp(unsigned char val) {
+int clamp(int val) {
     return min(max(val, 0), 255);
 }
 
@@ -330,7 +330,7 @@ unsigned char get_b(rrimage *data, int row, int col) {
     return data->pixels[row * data->width * 3 + col * 3 + 2];
 }
 
-void set_grey(unsigned char gray, rrimage *data, int row, int col) {
+void set_grey(int gray, rrimage *data, int row, int col) {
     if (data == NULL || data->channels != 1) {
         return;
     }
@@ -338,7 +338,7 @@ void set_grey(unsigned char gray, rrimage *data, int row, int col) {
     data->pixels[row * data->width + col] = gray;
 }
 
-void set_r(unsigned char r, rrimage *data, int row, int col) {
+void set_r(int r, rrimage *data, int row, int col) {
     if (data == NULL || data->channels != 3) {
         return;
     }
@@ -346,7 +346,7 @@ void set_r(unsigned char r, rrimage *data, int row, int col) {
     data->pixels[row * data->width * 3 + col * 3] = clamp(r);
 }
 
-void set_g(unsigned char g, rrimage *data, int row, int col) {
+void set_g(int g, rrimage *data, int row, int col) {
     if (data == NULL || data->channels != 3) {
         return;
     }
@@ -354,7 +354,7 @@ void set_g(unsigned char g, rrimage *data, int row, int col) {
     data->pixels[row * data->width * 3 + col * 3 + 1] = clamp(g);
 }
 
-void set_b(unsigned char b, rrimage *data, int row, int col) {
+void set_b(int b, rrimage *data, int row, int col) {
     if (data == NULL || data->channels != 3) {
         return;
     }

@@ -28,7 +28,7 @@ typedef struct my_error_mgr {
 	jmp_buf setjmp_buffer;
 }* my_error_ptr;
 
-unsigned char clamp(unsigned char);
+int clamp(int);
 
 void free_rrimage(rrimage *);
 
@@ -42,11 +42,11 @@ unsigned char get_b(rrimage *, int, int);
 
 void set_gray(unsigned char gray, rrimage *, int, int);
 
-void set_r(unsigned char r, rrimage *, int, int);
+void set_r(int r, rrimage *, int, int);
 
-void set_g(unsigned char g, rrimage *, int, int);
+void set_g(int g, rrimage *, int, int);
 
-void set_b(unsigned char b, rrimage *, int, int);
+void set_b(int b, rrimage *, int, int);
 
 int check_if_png(char *);
 
